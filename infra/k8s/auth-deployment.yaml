@@ -14,6 +14,17 @@ spec:
       containers:
       - name: auth-deployment
         image: navaneethvinod/auth-service
+        env: 
+          - name: JWT_SECRET
+            valueFrom:
+              secretKeyRef:
+                name: jwt-secret
+                key: JWT_KEY
+          - name: MONGO_URI
+            valueFrom:
+                secretKeyRef:
+                  name: mongo-uri-secret
+                  key: MONGO_URI
         resources:
           limits:
             memory: "128Mi"

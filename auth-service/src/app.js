@@ -26,7 +26,7 @@ app.use(errorHandler);
 
 const connectDB = async () => {
   try {
-    await mongoose.connect("mongodb://auth-mongo-svc:27017/auth");
+    await mongoose.connect(process.env.MONGO_URI);
     console.log("Database Connected");
   } catch (error) {
     console.log(error.message);
