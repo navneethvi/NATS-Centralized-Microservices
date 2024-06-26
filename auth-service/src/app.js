@@ -2,6 +2,7 @@ import express from "express";
 
 import router from "./routers/router.js";
 import errorHandler from "./middleware/errorhandler.js";
+import mongoose from 'mongoose'
 
 const app = express();
 
@@ -22,6 +23,17 @@ app.all("*", async (req, res, next) => {
 });
 
 app.use(errorHandler);
+
+const connectDB = async () => {
+  try {
+    await mongoose.connect("mongodb://auth-mongo-svc:27017/auth");
+    console.log("Database Connected");
+  } catch (error) {
+    console.log(error.message);
+  }
+};
+
+connectDB();
 
 app.listen(8000, () => {
   console.log("Auth Service Listening on 8000!!!");
