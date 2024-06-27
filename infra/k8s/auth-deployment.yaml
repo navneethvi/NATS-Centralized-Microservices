@@ -22,9 +22,14 @@ spec:
                 key: JWT_KEY
           - name: MONGO_URI
             valueFrom:
-                secretKeyRef:
-                  name: mongo-uri-secret
-                  key: MONGO_URI
+              secretKeyRef:
+                name: mongo-uri-secret
+                key: MONGO_URI
+          - name: SESSION_SECRET
+            valueFrom:
+              secretKeyRef:
+                name: express-session-secret
+                key: SESSION_SECRET
         resources:
           limits:
             memory: "128Mi"

@@ -2,11 +2,19 @@ import express from "express";
 
 import router from "./routers/router.js";
 import errorHandler from "./middleware/errorhandler.js";
-import mongoose from 'mongoose'
-
+import mongoose from "mongoose";
+import session from "express-session";
 const app = express();
 
 app.use(express.json());
+
+app.use(
+  session({
+    secret: process.env.SESSION_SECRET,
+    resave: false,
+    saveUninitialized: false,
+  })
+);
 
 app.use(router);
 
@@ -25,6 +33,9 @@ app.all("*", async (req, res, next) => {
 app.use(errorHandler);
 
 const connectDB = async () => {
+  if (process.env.JWT_KEY) {
+    throw new Error("JWT_KEY must be defined");
+  }
   try {
     await mongoose.connect(process.env.MONGO_URI);
     console.log("Database Connected");

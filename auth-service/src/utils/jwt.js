@@ -13,4 +13,14 @@ const createToken = async (user) => {
     }
 };
 
-export {createToken}
+const verifyToken = (token) => {
+    try {
+        const secret = process.env.JWT_SECRET;
+        const decoded = jwt.verify(token, secret);
+        return decoded; 
+    } catch (error) {
+        console.log(error.message);
+    }
+};
+
+export {createToken, verifyToken}
