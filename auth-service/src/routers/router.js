@@ -9,9 +9,11 @@ import {
 
 import { body } from "express-validator";
 
+import isLogin from "../middleware/auth.js";
+
 const router = Router();
 
-router.get("/api/users/currentuser", getCurrentUser);
+router.get("/api/users/currentuser",isLogin, getCurrentUser);
 router.post(
   "/api/users/signup",
   [
@@ -35,6 +37,6 @@ router.post(
   signInUser
 );
 
-router.post("/api/users/signout", signOutUser)
+router.post("/api/users/signout",isLogin, signOutUser)
 
 export default router;

@@ -20,6 +20,7 @@ const verifyToken = (token) => {
         return decoded; 
     } catch (error) {
         console.log(error.message);
+        return null;
     }
 };
 
