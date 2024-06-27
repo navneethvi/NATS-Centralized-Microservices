@@ -37,6 +37,7 @@ const connectDB = async () => {
     throw new Error("JWT_KEY must be defined");
   }
   try {
+    console.log(process.env.MONGO_URI);
     await mongoose.connect(process.env.MONGO_URI);
     console.log("Database Connected");
   } catch (error) {
