@@ -25,7 +25,12 @@ spec:
               secretKeyRef:
                 name: ticket-mongo-uri-secret
                 key: MONGO_URI
-        resources:
+          - name: SESSION_SECRET
+            valueFrom:
+              secretKeyRef:
+                name: express-session-secret
+                key: SESSION_SECRET
+        resources:  
           limits:
             memory: "128Mi"
             cpu: "500m"

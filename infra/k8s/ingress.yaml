@@ -19,3 +19,10 @@ spec:
             name: auth-svc
             port:
               number: 8000
+      - pathType: ImplementationSpecific
+        path: "/api/tickets/(.*)"
+        backend:
+          service:
+            name: ticket-svc
+            port:
+              number: 8001
