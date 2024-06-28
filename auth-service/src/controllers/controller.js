@@ -4,7 +4,7 @@ import { User } from "../models/userSchema.js";
 
 import { securePassword, comparePassword } from "../utils/bcrypt.js";
 
-import { createToken, verifyToken } from "../utils/jwt.js";
+import { createToken, verifyToken, inValidate } from "../utils/jwt.js";
 
 const COOKIE_OPTIONS = {
     httpOnly: true, 
@@ -15,16 +15,12 @@ const COOKIE_OPTIONS = {
 
 const getCurrentUser = async (req, res, next) => {
   try { 
-    if(!req.session.jwt){
-        return res.send({currentUser : null})
-    }
-    const payload = verifyToken(req.session.jwt)
-    res.send({currentUser : payload})
-    
+    console.log("user",req.user);
+    return res.send({currentUser:req.user || null})
   } catch (error) {
     console.log(error.message);
     next(error)
-  }
+  } 
 };
 
 const signUpUser = async (req, res, next) => {
@@ -56,15 +52,14 @@ const signUpUser = async (req, res, next) => {
         email: email,
         password: hashedPass,
       });
-      if (createdUser) {
-        const userToken = await createToken(createdUser);
-        console.log("Token generated: ", userToken);
-        req.session = {jwt: userToken}
+    //   if (createdUser) {
+    //     const userToken = await createToken(createdUser);
+    //     console.log("Token generated: ", userToken);
+    //     req.session.jwt = userToken
         res.send({
           user: { id: createdUser._id, email: createdUser.email },
-          userToken,
         });
-      }
+    //   }
     }
   } catch (error) {
     console.log(error.message);
@@ -91,6 +86,7 @@ const signInUser = async (req, res, next) => {
         const error = new Error("Invalid Credentials");
         error.type = "BadRequest";
         error.statusCode = 400;
+        error.reasons = [{ message: "Invalid Credentials !!" }];
         throw error;
       }
   
@@ -103,7 +99,7 @@ const signInUser = async (req, res, next) => {
         throw error;
       }
 
-  
+      console.log(userExist);
       const userToken = await createToken(userExist);
       console.log("Token generated: ", userToken);
 
@@ -121,14 +117,16 @@ const signInUser = async (req, res, next) => {
   };
 const signOutUser = async (req, res, next) => {
   try {
-    req.session.destroy((err) => {
-        if (err) {
-          console.error("Error destroying session:", err.message);
-          return next(err);
-        }
-        res.clearCookie('session-id'); 
-        res.send({});
-      });
+    if(req.headers && req.headers["authorization"]){
+        const token = req.headers['authorization'].split(' ')[1];
+        const decode = inValidate(token)
+        res.send({userToken : decode})
+    }else{
+        const error = new Error();
+        error.type = 'BadRequest'
+        error.statusCode = 400
+        error.reasons = [{message:'No token exist!'}]
+    }
   } catch (error) {
     console.log(error.message);
     next(error)

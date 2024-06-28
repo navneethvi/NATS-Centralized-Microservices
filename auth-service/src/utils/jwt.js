@@ -4,8 +4,8 @@ import { createHash } from "crypto";
 const createToken = async (user) => {
     try {
         const secret = process.env.JWT_SECRET
-        const token = await jwt.sign({id : user._id, email : user.email}, secret, {
-            expiresIn: "10m"
+        const token = jwt.sign({id : user._id, email : user.email}, secret, {
+            expiresIn: "15m"
         })
         return token
     } catch (error) {
@@ -24,4 +24,10 @@ const verifyToken = (token) => {
     }
 };
 
-export {createToken, verifyToken}
+const inValidate = (token) => {
+    const hash = createHash("sha256");
+    hash.update(token);
+    return hash.digest("hex");
+  };
+
+export {createToken, verifyToken, inValidate}
