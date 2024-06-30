@@ -145,7 +145,7 @@ const viewAllTicket = async (req, res, next) => {
         title : ticket.title,
         price: ticket.price,
         userId: ticket.userId,
-        // orderId : ticket.orderId
+        orderId : ticket.orderId
       }
     })
     res.status(200).send(ticketArray)

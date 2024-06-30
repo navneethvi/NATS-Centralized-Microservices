@@ -79,4 +79,47 @@ const createOrder = async (req, res, next) => {
   }
 };
 
+const cancelOrder = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const order = await Order.findById(id).populate("ticket");
+    if (!order) {
+      const error = new Error();
+      error.type = "NotFound";
+      error.statusCode = 404;
+      error.reasons = [{ message: "Order not found!!" }];
+      throw error;
+    }
+    if (order.userId != req.user.id) {
+      let error = new Error();
+      error.type = "Unauthorized";
+      error.statusCode = 403;
+      error.reasons = [{ message: "Unauthorized" }];
+      throw error;
+    }
+
+    order.set({
+      status: "Cancelled",
+    });
+    await order.save();
+
+    ////////////////////////////
+
+    res.status(201).send({
+        id:statusUpdate.id,
+        status:statusUpdate.status,
+        userId:statusUpdate.userId,
+        expiresAt:statusUpdate.expiresAt,
+        ticket :{
+          id:order.ticket._id,
+          title:order.ticket.title,
+          price:order.ticket.price
+        }
+      });
+  } catch (error) {
+    console.log(error.message);
+    next(error);
+  }
+};
+
 export { createOrder };
