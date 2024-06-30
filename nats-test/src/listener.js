@@ -16,5 +16,6 @@ stan.on("connect", () => {
   });
 
   new TicketCreatedListener(stan).listen()
+  
 
 });
