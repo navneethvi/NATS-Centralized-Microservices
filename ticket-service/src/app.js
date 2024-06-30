@@ -4,6 +4,8 @@ import errorHandler from "./middleware/errorhandler.js";
 import mongoose from "mongoose";
 import router from "./routers/router.js";
 
+import natsWrapper from './nats/nats-client.js'
+
 const app = express();
 
 app.use(express.json());
@@ -37,7 +39,7 @@ const connectDB = async () => {
     throw new Error("JWT_KEY must be defined");
   }
   try {
-    console.log(process.env.MONGO_URI);
+    await natsWrapper.connect('ticketing', 'abc', 'http://nats-svc:4222')
     await mongoose.connect(process.env.MONGO_URI);
     console.log("Database Connected");
   } catch (error) {

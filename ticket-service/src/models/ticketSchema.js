@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import { updateIfCurrentPlugin } from "mongoose-update-if-current";
 
 const ticketSchema = mongoose.Schema({
   title: {
@@ -20,9 +21,8 @@ const ticketSchema = mongoose.Schema({
 });
 
 ticketSchema.set("versionKey", "version");
+ticketSchema.plugin(updateIfCurrentPlugin)
 
 const Ticket = mongoose.model("Ticket", ticketSchema);
 
 export { Ticket };
-
-

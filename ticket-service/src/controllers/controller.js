@@ -1,6 +1,7 @@
 import { Ticket } from "../models/ticketSchema.js";
 import { body, validationResult } from "express-validator";
-
+import TicketCreatedPublisher from "../nats/publishers/TicketCreatedPublisher.js";
+import NatsWrapper from "../nats/nats-client.js";
 const createTicket = async (req, res, next) => {
   try {
     console.log("create", req.body);
@@ -16,12 +17,26 @@ const createTicket = async (req, res, next) => {
     }
     const { title, price } = req.body;
     const newTicket = await Ticket.create({
-        title : title,
-        price : price,
-        userId : req.user.id
-    })
+      title: title,
+      price: price,
+      userId: req.user.id,
+    });
+
+    await new TicketCreatedPublisher(NatsWrapper.getClient()).publish({
+      id: newTicket._id,
+      title: newTicket.title,
+      price: newTicket.price,
+      userId: newTicket.userId,
+      version: newTicket.version,
+    });
+    const ticketOrg = {
+      id: newTicket._id,
+      title: newTicket.title,
+      price: newTicket.price,
+      userId: newTicket.userId,
+    };
     console.log("Ticket created...");
-    console.log(newTicket);
+    res.status(200).send(ticketOrg)
   } catch (error) {
     console.log(error.message);
     next(error);

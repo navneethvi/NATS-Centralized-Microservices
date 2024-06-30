@@ -8,7 +8,7 @@ const router = Router();
 router.post(
   "/api/tickets/create",
   isLogin,
-//   [body("title").not().isEmpty().withMessage("Title is required")],
+  [body("title").not().isEmpty().withMessage("Title is required")],
   createTicket
 );
 
