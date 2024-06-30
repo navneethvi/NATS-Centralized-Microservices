@@ -1,4 +1,4 @@
-import { verifyToken } from "../utils/jwt.js";
+import { verifyToken } from "../util/jwt.js";
 
 const isLogin = async (req, res, next) => {
 
