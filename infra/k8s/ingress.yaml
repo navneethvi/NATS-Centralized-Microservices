@@ -26,3 +26,10 @@ spec:
             name: ticket-svc
             port:
               number: 8001
+      - pathType: ImplementationSpecific
+        path: "/api/orders/(.*)"
+        backend:
+          service:
+            name: order-svc
+            port:
+              number: 8002

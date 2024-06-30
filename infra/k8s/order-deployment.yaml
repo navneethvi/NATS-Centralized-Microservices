@@ -1,0 +1,49 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: order-deployment
+spec:
+  selector:
+    matchLabels:
+      app: order
+  template:
+    metadata:
+      labels:
+        app: order
+    spec:
+      containers:
+      - name: order-deployment
+        image: navaneethvinod/order-service
+        env: 
+          - name: JWT_SECRET
+            valueFrom:
+              secretKeyRef:
+                name: jwt-secret
+                key: JWT_KEY
+          - name: MONGO_URI
+            valueFrom:
+              secretKeyRef:
+                name: order-mongo-uri-secret
+                key: MONGO_URI
+          - name: SESSION_SECRET
+            valueFrom:
+              secretKeyRef:
+                name: express-session-secret
+                key: SESSION_SECRET
+        resources:  
+          limits:
+            memory: "128Mi"
+            cpu: "500m"
+        ports:
+        - containerPort: 8001
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: order-svc
+spec:
+  selector:
+    app: order
+  ports:
+  - port: 8002
+    targetPort: 8002
