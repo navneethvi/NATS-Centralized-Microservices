@@ -25,7 +25,7 @@ app.all("*", async (req, res, next) => {
     error.statusCode = 404;
     error.reasons = [{ message: "Not Found" }];
     throw error;
-  } catch (err) {
+  } catch (err) { 
     next(err);
   }
 });
