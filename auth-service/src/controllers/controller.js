@@ -103,7 +103,7 @@ const signInUser = async (req, res, next) => {
       const userToken = await createToken(userExist);
       console.log("Token generated: ", userToken);
 
-      req.session.jwt = userToken
+    
       console.log("session", req.session);
       res.status(200).json({
         user: { id: userExist._id, email: userExist.email },

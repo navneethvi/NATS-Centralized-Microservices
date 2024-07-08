@@ -8,13 +8,7 @@ const app = express();
 
 app.use(express.json());
 
-app.use(
-  session({
-    secret: process.env.SESSION_SECRET,
-    resave: false,
-    saveUninitialized: false,
-  })
-);
+
 
 app.use(router);
 
@@ -38,7 +32,7 @@ const connectDB = async () => {
   }
   try {
     console.log(process.env.MONGO_URI);
-    await mongoose.connect(process.env.MONGO_URI);
+    await mongoose.connect("mongodb://auth-mongo-svc:27017/auth" || process.env.MONGO_URI);
     console.log("Database Connected");
   } catch (error) {
     console.log(error.message);
