@@ -24,7 +24,7 @@ build:
         manual:
           - dest: .
             src: 'src/**/*.js'
-    - image: navaneethvinod/order-service
+    - image: navaneethvinod/order-service-ticketing
       context: order-service
       docker:
         dockerfile: Dockerfile
