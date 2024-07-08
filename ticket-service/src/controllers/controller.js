@@ -2,8 +2,9 @@ import { Ticket } from "../models/ticketSchema.js";
 import { body, validationResult } from "express-validator";
 import TicketCreatedPublisher from "../nats/publishers/TicketCreatedPublisher.js";
 import TicketUpdatedPublisher from "../nats/publishers/TicketUpdatedPublisher.js";
-import NatsWrapper from "../nats/nats-client.js";
-import CustomError from "../middleware/customError.js";
+import natsWrapper from "../nats/nats-client.js";
+
+
 
 const createTicket = async (req, res, next) => {
   try {
@@ -25,7 +26,7 @@ const createTicket = async (req, res, next) => {
       userId: req.user.id,
     });
 
-    await new TicketCreatedPublisher(NatsWrapper.getClient()).publish({
+    await new TicketCreatedPublisher(natsWrapper.getClient()).publish({
       id: newTicket._id,
       title: newTicket.title,
       price: newTicket.price,
@@ -85,7 +86,7 @@ const updateTicket = async (req, res, next) => {
     ticket.price = price;
     await ticket.save();
 
-    await new TicketUpdatedPublisher(NatsWrapper.getClient()).publish({
+    await new TicketUpdatedPublisher(natsWrapper.getClient()).publish({
       id: ticket._id,
       title: ticket.title,
       price: ticket.price,
@@ -113,7 +114,7 @@ const viewTicket = async (req, res, next) => {
     const { id } = req.params;
     console.log(id);
     const ticket = await Ticket.findById(id);
-    if (!ticket) {
+    if (!ticket) { 
       let error = new Error("Ticket Not Found!");
       error.type = "NotFound";
       error.statusCode = 404;

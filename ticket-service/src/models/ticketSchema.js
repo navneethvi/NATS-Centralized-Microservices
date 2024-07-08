@@ -25,4 +25,4 @@ ticketSchema.plugin(updateIfCurrentPlugin)
 
 const Ticket = mongoose.model("Ticket", ticketSchema);
 
-export { Ticket };
+export { Ticket };    

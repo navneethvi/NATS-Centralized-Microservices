@@ -12,13 +12,7 @@ const app = express();
 
 app.use(express.json());
 
-app.use(
-  session({
-    secret: process.env.SESSION_SECRET,
-    resave: false,
-    saveUninitialized: false,
-  })
-);
+
 
 app.use(router);
 
@@ -52,12 +46,12 @@ const connectDB = async () => {
     new OrderCreatedListener(natsWrapper.getClient()).listen()
     new OrderCancelledListener(natsWrapper.getClient()).listen()
     
-    await mongoose.connect(process.env.MONGO_URI);
+    await mongoose.connect("mongodb://ticket-mongo-svc:27017/ticket" || process.env.MONGO_URI);
     console.log("Database Connected");
   } catch (error) {
     console.log(error.message);    
   }
-};
+};      
 
 connectDB();
 
