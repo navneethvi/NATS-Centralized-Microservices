@@ -12,8 +12,8 @@ spec:
         app: order
     spec:
       containers:
-      - name: order-deployment
-        image: navaneethvinod/order-service
+      - name: order-deployment-tick
+        image: navaneethvinod/order-service-ticketing
         env: 
           - name: JWT_SECRET
             valueFrom:
@@ -25,11 +25,6 @@ spec:
               secretKeyRef:
                 name: order-mongo-uri-secret
                 key: MONGO_URI
-          - name: SESSION_SECRET
-            valueFrom:
-              secretKeyRef:
-                name: express-session-secret
-                key: SESSION_SECRET
         resources:  
           limits:
             memory: "128Mi"
