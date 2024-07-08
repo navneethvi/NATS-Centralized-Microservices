@@ -2,7 +2,7 @@ import { Router } from "express";
 import { body, validationResult } from "express-validator";
 import isLogin from "../middleware/auth.js";
 
-import { createOrder } from "../controllers/controller.js";
+import { createOrder, cancelOrder, viewAllOrders } from "../controllers/controller.js";
 
 const router = Router();
 
@@ -12,6 +12,8 @@ router.post("/api/orders/create", [
   createOrder,
 ]);
 
-router.post("/api/orders/:id")
+router.post("/api/orders/:id", isLogin, cancelOrder);
+
+router.get("/api/orders/getAll", isLogin, viewAllOrders);
 
 export default router;

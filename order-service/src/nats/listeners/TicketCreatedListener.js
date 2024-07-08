@@ -13,7 +13,7 @@ class TicketCreatedListener extends Listener {
       title,
       price,
     });
-    console.log(newTicket);
+    console.log("newTicket : ",newTicket);
     msg.ack();
   }
 }

@@ -14,13 +14,6 @@ const app = express();
 
 app.use(express.json());
 
-app.use(
-  session({
-    secret: process.env.SESSION_SECRET,
-    resave: false,
-    saveUninitialized: false,
-  })
-);
 
 app.use(router);
 
@@ -36,8 +29,8 @@ app.all("*", async (req, res, next) => {
   }
 });
 
-app.use(errorHandler);
-
+app.use(errorHandler);  
+    
 const connectDB = async () => {
   if (process.env.JWT_KEY) {
     throw new Error("JWT_KEY must be defined");
@@ -57,7 +50,7 @@ const connectDB = async () => {
     new TicketUpdatedListener(natsWrapper.getClient()).listen();
 
 
-    await mongoose.connect(process.env.MONGO_URI);
+    await mongoose.connect("mongodb://order-mongo-svc:27017/order" || process.env.MONGO_URI);
     console.log("Database Connected");
   } catch (error) {
     console.log(error.message);
